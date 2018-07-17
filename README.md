@@ -39,4 +39,10 @@ import { NgxSwingModule } from 'ngx-swing';
 </div>
 ```
 
-### ⚡ This project is still work in progress.
+### Road Map
+
+1. Implementing the card events (move, free, throwOut, throwIn)
+2. Ability to remove the cards from <b>DOM</b> after throwOut <b>(this is for avoiding from possibly memory leak)</b>
+3. Ability to throwOut cards without user interaction.
+
+### ⚡ This project is under active development.
