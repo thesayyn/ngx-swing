@@ -2,18 +2,19 @@ import {
   Component,
   HostListener,
   HostBinding,
-  ElementRef
+  Host
 } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { animate, style, trigger, state, transition, AnimationEvent, keyframes, group } from '@angular/animations';
 import { Direction } from './direction';
 import { Offset } from './offset';
 import { Dimension } from './dimension';
+import { SwingStackDirective } from './swing-stack.directive';
 
 
 @Component({
   // tslint:disable-next-line:component-selector
-  selector: '[swingCard]',
+  selector: 'swing-card,[swingCard]',
   template: `<ng-content></ng-content>`,
   animations: [
     trigger('cardState', [
@@ -81,7 +82,11 @@ export class SwingCardComponent {
   }
 
 
-  constructor(private elementRef: ElementRef<HTMLElement>, private sanitizer: DomSanitizer) { }
+  constructor(
+    @Host()
+    private stack: SwingStackDirective,
+    private sanitizer: DomSanitizer
+  ) { }
 
 
 
@@ -176,7 +181,7 @@ export class SwingCardComponent {
   }
 
   getDimensions(): Dimension {
-    return { height: this.elementRef.nativeElement.offsetHeight, width: this.elementRef.nativeElement.offsetWidth };
+    return this.stack.getDimensions();
   }
 
   getThrowOutRange(offset: Offset): number {
