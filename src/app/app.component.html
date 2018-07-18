@@ -1,11 +1,9 @@
 <div swingStack>
-  <div swingCard>
-    <img src="../assets/images/angular.svg">
-  </div>
-  <div swingCard>
-    <img src="../assets/images/ionic.svg">
-  </div>
-  <div swingCard>
-    <img src="../assets/images/capacitor.png">
+  <div
+    *ngFor="let image of ['angular.svg', 'ionic.svg', 'capacitor.png']" 
+    swingCard 
+    (cardStateChange)="cardStateChanged($event)"
+    (offsetStateChange)="offsetStateChanged($event)">
+    <img [src]="'../assets/images/'+ image">
   </div>
 </div>

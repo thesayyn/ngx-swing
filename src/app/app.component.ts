@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CardStateEvent, OffsetStateEvent } from 'ngx-swing';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,12 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'app';
+
+  cardStateChanged(event: CardStateEvent) {
+    console.log('card state changed!', event)
+  }
+
+  offsetStateChanged(event: OffsetStateEvent) {
+    console.log('offset state changed!', event)
+  }
 }

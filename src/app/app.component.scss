@@ -1,38 +1,50 @@
-div[swingstack]{
-  position: relative;
-  height: 500px;
-  width: 300px;
-  border: 2px dotted #ddd;
+:host{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 
-  &::before{
-    content: '🐸';
-    opacity: 0.5;
-    position: absolute;
-    left: 0;
-    height: 100%;
+  div[swingstack]{
+    position: relative;
+    height: 500px;
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 50px;
-  }
-
-  div{
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    background: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: border-color 0.6s linear;
-    &[offset-state=moving] {
-      border: 2px dotted #fa5265;
+    max-width: 500px;
+    border: 2px dotted #ddd;
+  
+    &::before{
+      content: '🐸';
+      opacity: 0.5;
+      position: absolute;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 50px;
     }
-    img{
-      pointer-events: none;
+  
+    div{
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      max-width: 300px;
+      left: calc(50% - 150px);
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: border-color 0.6s linear;
+      &[offset-state=moving] {
+        border: 2px dotted #fa5265;
+      }
+      img{
+        pointer-events: none;
+      }
     }
+  
   }
-
 }
-
