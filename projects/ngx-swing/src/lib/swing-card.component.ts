@@ -2,7 +2,9 @@ import {
   Component,
   HostListener,
   HostBinding,
-  Host
+  Host,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { animate, style, trigger, state, transition, AnimationEvent, keyframes, group } from '@angular/animations';
@@ -77,9 +79,15 @@ export class SwingCardComponent {
 
   @HostBinding('attr.offset-state')  
   get _offsetState(): OffsetState {
-    console.log(this.cardState , this._offset);
-    return  this._offset.y !== 0 && this._offset.x !== 0 && this._cardState === CardState.free ? OffsetState.moving : OffsetState.initial
+    return  this._offset.y !== 0 && this._offset.x !== 0 && this._cardState === CardState.free ? OffsetState.moving : OffsetState.stable
   }
+
+
+  @Output() 
+  public readonly cardStateChange: EventEmitter<CardStateEvent> = new EventEmitter<CardStateEvent>();
+
+  @Output() 
+  public readonly offsetStateChange: EventEmitter<OffsetStateEvent> = new EventEmitter<OffsetStateEvent>();
 
 
   constructor(
@@ -90,30 +98,23 @@ export class SwingCardComponent {
 
 
 
-  @HostListener('panstart')
-  panstart(): void {
+  @HostListener('panstart', ["$event"])
+  _panstart(event): void {
     this._cardState = CardState.free;
+    this._move(event);
   }
 
   @HostListener('panmove', ['$event'])
-  panmove(event): void {
-
-    const lastX = this._lastMove.deltaX || 0, lastY = this._lastMove.deltaY || 0;
-
-    this._offset = { x: event.deltaX + lastX, y: event.deltaY + lastY };
-    this._rotation = this.getRotation(this._offset);
-
-
-    this._lastMove = event;
+  _panmove(event): void {
+    this._move(event);
   }
 
   @HostListener('panend', ['$event'])
-  panend(event): void {
+  _panend(event): void {
     
     const lastX = this._lastMove.deltaX || 0, lastY = this._lastMove.deltaY || 0;
     const offset = { x: event.deltaX + lastX, y: event.deltaY + lastY };
     const isThrowOut = this.getThrowOutRange(offset) === 1;
-    const direction = this.getDirection(offset);
 
     if (isThrowOut) {
       this.throwOut(offset);
@@ -122,14 +123,25 @@ export class SwingCardComponent {
     }
   }
 
+  _move(event): void {
+    const lastX = this._lastMove.deltaX || 0, lastY = this._lastMove.deltaY || 0;
+    this._offset = { x: event.deltaX + lastX, y: event.deltaY + lastY };
+    this._rotation = this.getRotation(this._offset);
+    this._lastMove = event;
+    const isThrowOut = this.getThrowOutRange(this._offset) === 1;
+    this.offsetStateChange.emit({
+      offsetState: OffsetState.moving,
+      cardState: isThrowOut ? CardState.throwOut : CardState.throwIn
+    })
+  }
+
   @HostListener('@cardState.done', ['$event'])
-  stateAnimationDone(event: AnimationEvent): void {
+  _stateAnimationDone(event: AnimationEvent): void {
 
     if (event.toState == CardState.throwOut) {
       this._offset = { x: this._animationParams.x, y: this._animationParams.y };
       this._rotation = this._animationParams.rotation;
     } else {
-      this.cardState == CardState.free;
       this._offset = { x: 0, y: 0 };
       this._rotation = 0;
     }
@@ -151,6 +163,7 @@ export class SwingCardComponent {
 
     this._animationParams = { rotation, verticalVelocity, horizontalVelocity }
     this._cardState = CardState.throwIn
+    this.cardStateChange.emit({ state: this._cardState });
   }
 
   throwOut(offset: Offset): void {
@@ -165,6 +178,7 @@ export class SwingCardComponent {
 
     this._animationParams = { rotation, y, x }
     this._cardState = CardState.throwOut
+    this.cardStateChange.emit({ state: this._cardState });
   }
 
   getRotation(offset: Offset): number {
@@ -205,7 +219,17 @@ export enum CardState {
   free = 'free'
 }
 
+export interface CardStateEvent{
+  state: CardState
+}
+
 export enum OffsetState {
-  initial = 'initial',
+  stable = 'stable',
   moving = 'moving'
+}
+
+
+export interface OffsetStateEvent{
+  offsetState: OffsetState,
+  cardState: CardState
 }
