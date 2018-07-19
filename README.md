@@ -1,6 +1,6 @@
 # ngx-swing 🍺
 
-[![npm version](https://badge.fury.io/js/ngx-swing.svg)](https://badge.fury.io/js/ngx-swing) [![npm](https://img.shields.io/npm/dw/ngx-swing.svg)](https://www.npmjs.com/package/ngx-swing)
+[![npm version](https://badge.fury.io/js/ngx-swing.svg)](https://www.npmjs.com/package/ngx-swing) [![npm](https://img.shields.io/npm/dw/ngx-swing.svg)](https://www.npmjs.com/package/ngx-swing)
 
 
 Angular 6+ compatible swing components 
@@ -41,7 +41,7 @@ import { NgxSwingModule } from 'ngx-swing';
 
 ### Road Map
 
-1. Implementing the card events (move, free, throwOut, throwIn)
+1. <s>Implementing the card events (move, free, throwOut, throwIn)</s>
 2. Ability to remove the cards from <b>DOM</b> after throwOut <b>(this is for avoiding from possibly memory leak)</b>
 3. Ability to throwOut cards without user interaction.
 
