@@ -220,6 +220,7 @@ export enum CardState {
 }
 
 export interface CardStateEvent{
+  card?: SwingCardComponent
   state: CardState
 }
 
@@ -230,6 +231,7 @@ export enum OffsetState {
 
 
 export interface OffsetStateEvent{
-  offsetState: OffsetState,
+  card?: SwingCardComponent
+  offsetState: OffsetState
   cardState: CardState
 }
