@@ -2,9 +2,12 @@ import {
   Component,
   HostListener,
   HostBinding,
-  Host,
   Output,
-  EventEmitter
+  EventEmitter,
+  Inject,
+  forwardRef,
+  Optional,
+  Input
 } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { animate, style, trigger, state, transition, AnimationEvent, keyframes, group } from '@angular/animations';
@@ -12,6 +15,7 @@ import { Direction } from './direction';
 import { Offset } from './offset';
 import { Dimension } from './dimension';
 import { SwingStackDirective } from './swing-stack.directive';
+import { calculateRotation } from './utils';
 
 
 @Component({
@@ -46,11 +50,13 @@ import { SwingStackDirective } from './swing-stack.directive';
 })
 export class SwingCardComponent {
 
-  @HostBinding('@cardState') get cardState(): any {
+  @HostBinding('@cardState') 
+  get __cardState(): any {
     return { value: this._cardState, params: this._animationParams };
   }
 
-  @HostBinding('style.transform') get transform(): SafeStyle {
+  @HostBinding('style.transform') 
+  get _transform(): SafeStyle {
     return this.sanitizer.bypassSecurityTrustStyle(
       `translate3d(0, 0, 0) translate(${this._offset.x}px, ${this._offset.y}px) rotate(${this._rotation}deg)`
     );
@@ -83,6 +89,11 @@ export class SwingCardComponent {
   }
 
 
+  @Input() 
+  public get cardState(): CardState {
+    return this._cardState;
+  }
+
   @Output() 
   public readonly cardStateChange: EventEmitter<CardStateEvent> = new EventEmitter<CardStateEvent>();
 
@@ -91,7 +102,8 @@ export class SwingCardComponent {
 
 
   constructor(
-    @Host()
+    @Optional() 
+    @Inject(forwardRef(() => SwingStackDirective))
     private stack: SwingStackDirective,
     private sanitizer: DomSanitizer
   ) { }
@@ -126,7 +138,7 @@ export class SwingCardComponent {
   _move(event): void {
     const lastX = this._lastMove.deltaX || 0, lastY = this._lastMove.deltaY || 0;
     this._offset = { x: event.deltaX + lastX, y: event.deltaY + lastY };
-    this._rotation = this.getRotation(this._offset);
+    this._rotation = calculateRotation(this.getDimensions(), this._offset) * this._rotationFactor;
     this._lastMove = event;
     const isThrowOut = this.getThrowOutRange(this._offset) === 1;
     this.offsetStateChange.emit({
@@ -157,7 +169,7 @@ export class SwingCardComponent {
     const verticalAxis = offset.y < 0 ? 1 : -1;
     const horizontalAxis = offset.x < 0 ? 1 : -1;
 
-    const rotation = this.getRotation(offset) / this._velocityFactor;
+    const rotation = (calculateRotation(this.getDimensions(), offset) * this._rotationFactor) / this._velocityFactor;
     const verticalVelocity = this._velocityFactor * verticalAxis;
     const horizontalVelocity = this._velocityFactor * horizontalAxis;
 
@@ -172,7 +184,7 @@ export class SwingCardComponent {
       throw new Error( `Offset.x and Offset.y must be lower or greater than zero.` );
     }
   
-    const rotation = this.getRotation(offset) * 2;
+    const rotation = calculateRotation(this.getDimensions(), offset) * this._rotationFactor * 2;
     const y = offset.y * 2;
     const x = offset.x * 2;
 
@@ -181,18 +193,6 @@ export class SwingCardComponent {
     this.cardStateChange.emit({ state: this._cardState });
   }
 
-  getRotation(offset: Offset): number {
-    const dimension = this.getDimensions();
-    const horizontalOffset = Math.min(Math.max(offset.x / dimension.width, -1), 1);
-    const verticalOffset = (offset.y > 0 ? 1 : -1) * Math.min(Math.abs(offset.y) / 100, 1);
-    return horizontalOffset * verticalOffset * this._rotationFactor;
-  }
-
-  getDirection(offset: Offset): Direction {
-    const horizontalDirection = offset.x < 0 ? Direction.Left : Direction.Right;
-    const verticalDirection = offset.y < 0 ? Direction.Up : Direction.Down;
-    return Math.abs(offset.x) > Math.abs(offset.y) ? horizontalDirection : verticalDirection;
-  }
 
   getDimensions(): Dimension {
     return this.stack.getDimensions();
