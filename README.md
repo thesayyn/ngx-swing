@@ -32,10 +32,20 @@ import { NgxSwingModule } from 'ngx-swing';
 ```html
 <div swingStack>
 	<div swingCard>Card1</div>
-    <div swingCard>Card2</div>
-    <div swingCard>Card3</div>
-    <div swingCard>Card4</div>
+	<div swingCard>Card2</div>
+	<div swingCard>Card3</div>
+	<div swingCard>Card4</div>
 </div>
+```
+OR
+
+```html
+<swing-stack>
+	<swing-card>Card1</swing-card>
+	<swing-card>Card2</swing-card>
+	<swing-card>Card3</swing-card>
+	<swing-card>Card4</swing-card>
+</swing-stack>
 ```
 
 ### Road Map
