@@ -1,9 +1,8 @@
 # ngx-swing 🍺
+[![circleci](https://circleci.com/gh/thesayyn/ngx-swing/tree/master.png?style=shield)](https://circleci.com/gh/thesayyn/ngx-swing) [![npm version](https://badge.fury.io/js/ngx-swing.svg)](https://www.npmjs.com/package/ngx-swing) [![npm](https://img.shields.io/npm/dw/ngx-swing.svg)](https://www.npmjs.com/package/ngx-swing)
 
-[![npm version](https://badge.fury.io/js/ngx-swing.svg)](https://www.npmjs.com/package/ngx-swing) [![npm](https://img.shields.io/npm/dw/ngx-swing.svg)](https://www.npmjs.com/package/ngx-swing)
 
-
-Angular 6+ compatible swing components 
+Angular 6+ compatible swing components
 
 Demo: <a href="http://ngx-swing.firebaseapp.com" target="new">Click to see<a/>
 
