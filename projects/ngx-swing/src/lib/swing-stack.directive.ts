@@ -1,4 +1,4 @@
-import { AfterViewInit, ContentChildren, Directive, ElementRef, EventEmitter, Output, QueryList } from '@angular/core';
+import { AfterViewInit, ContentChildren, Directive, ElementRef, EventEmitter, Output, QueryList, forwardRef } from '@angular/core';
 import { Dimension } from './dimension';
 import { CardStateEvent, OffsetStateEvent, SwingCardComponent } from './swing-card.component';
 import { takeUntil } from 'rxjs/operators'
@@ -9,7 +9,7 @@ import { takeUntil } from 'rxjs/operators'
 })
 export class SwingStackDirective implements AfterViewInit {
 
-  @ContentChildren(SwingCardComponent)
+  @ContentChildren(forwardRef(() => SwingCardComponent))
   public readonly cards = new QueryList<SwingCardComponent>();
 
   @Output() 
