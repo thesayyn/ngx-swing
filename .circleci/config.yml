@@ -8,8 +8,8 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
       - run:
-          name: install-dependencies
-          command: yarn install
+          name: remove pre-build packages && install-dependencies
+          command: yarn remove ngx-swing
       - save_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
