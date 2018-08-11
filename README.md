@@ -51,7 +51,7 @@ OR
 ### Road Map
 
 1. <s>Implementing the card events (move, free, throwOut, throwIn)</s>
-2. Ability to remove the cards from <b>DOM</b> after throwOut <b>(this is for avoiding from possibly memory leak)</b>
+2. Ability to remove the cards from <b>DOM</b> after throwOut <b>(for avoiding from possible memory leak)</b>
 3. Ability to throwOut cards without user interaction.
 
 ### ⚡ This project is under active development.
