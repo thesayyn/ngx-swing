@@ -1,9 +1,9 @@
 {
   "name": "ngx-swing",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "peerDependencies": {
-    "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
-    "@angular/core": "^6.0.0-rc.0 || ^6.0.0"
+    "@angular/common": "^7.2.7",
+    "@angular/core": "^7.2.7"
   },
   "author": {
     "email": "thesayyn@gmail.com",
