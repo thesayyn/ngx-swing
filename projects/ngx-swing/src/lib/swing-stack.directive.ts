@@ -1,13 +1,13 @@
-import { AfterViewInit, ContentChildren, Directive, ElementRef, EventEmitter, Output, QueryList, forwardRef } from '@angular/core';
+import { AfterViewInit, ContentChildren, Directive, ElementRef, EventEmitter, Output, QueryList, forwardRef, OnDestroy } from '@angular/core';
 import { Dimension } from './dimension';
 import { CardStateEvent, OffsetStateEvent, SwingCardComponent } from './swing-card.component';
 import { takeUntil } from 'rxjs/operators'
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: 'swing-stack,[swingStack]'
+  selector: 'swing-stack,[swingStack]',
+  exportAs: 'swingStack'
 })
-export class SwingStackDirective implements AfterViewInit {
+export class SwingStackDirective implements AfterViewInit, OnDestroy {
 
   @ContentChildren(forwardRef(() => SwingCardComponent))
   public readonly cards = new QueryList<SwingCardComponent>();
@@ -40,7 +40,7 @@ export class SwingStackDirective implements AfterViewInit {
         takeUntil( this.dispose )
       )
       .subscribe( event => {
-        this.offsetStateChange.emit({...event, card })
+        this.offsetStateChange.emit({...event, card: card })
       })
 
       card.cardStateChange
@@ -48,7 +48,7 @@ export class SwingStackDirective implements AfterViewInit {
         takeUntil( this.dispose )
       )
       .subscribe( event => {
-        this.cardStateChange.emit({...event, card })
+        this.cardStateChange.emit({...event, card: card })
       })
     })
   }
@@ -57,4 +57,7 @@ export class SwingStackDirective implements AfterViewInit {
     return { height: this.elementRef.nativeElement.offsetHeight, width: this.elementRef.nativeElement.offsetWidth };
   }
 
+  ngOnDestroy(): void {
+    this.dispose.emit();
+  }
 }

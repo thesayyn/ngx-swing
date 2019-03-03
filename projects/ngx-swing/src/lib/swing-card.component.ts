@@ -1,26 +1,16 @@
-import {
-  Component,
-  HostListener,
-  HostBinding,
-  Output,
-  EventEmitter,
-  Inject,
-  forwardRef,
-  Optional,
-  Input
-} from '@angular/core';
+import { animate, AnimationEvent, keyframes, style, transition, trigger } from '@angular/animations';
+import { Component, EventEmitter, forwardRef, HostBinding, HostListener, Inject, Input, Optional, Output } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import { animate, style, trigger, state, transition, AnimationEvent, keyframes, group } from '@angular/animations';
-import { Direction } from './direction';
-import { Offset } from './offset';
 import { Dimension } from './dimension';
+import { Direction, calculateDirection } from './direction';
+import { Offset } from './offset';
 import { SwingStackDirective } from './swing-stack.directive';
 import { calculateRotation } from './utils';
 
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'swing-card,[swingCard]',
+  exportAs: 'swingCard',
   template: `<ng-content></ng-content>`,
   animations: [
     trigger('cardState', [
@@ -175,7 +165,7 @@ export class SwingCardComponent {
 
     this._animationParams = { rotation, verticalVelocity, horizontalVelocity }
     this._cardState = CardState.throwIn
-    this.cardStateChange.emit({ state: this._cardState });
+    this.cardStateChange.emit({ state: this._cardState, direction: calculateDirection(offset) });
   }
 
   throwOut(offset: Offset): void {
@@ -190,7 +180,7 @@ export class SwingCardComponent {
 
     this._animationParams = { rotation, y, x }
     this._cardState = CardState.throwOut
-    this.cardStateChange.emit({ state: this._cardState });
+    this.cardStateChange.emit({ state: this._cardState, direction: calculateDirection(offset) });
   }
 
 
@@ -222,6 +212,7 @@ export enum CardState {
 export interface CardStateEvent{
   card?: SwingCardComponent
   state: CardState
+  direction?: Direction
 }
 
 export enum OffsetState {
